@@ -22,7 +22,7 @@ class FleetAdmiral(Alert):
     def __init__(self):
         self.__tasks = []
         self.__robots = []
-        self.current_map = Map()
+        self.current_map = Map(figsize=(16, 12))
 
     def accept_tasks(self, task: list | tuple):
         """
@@ -47,19 +47,19 @@ class FleetAdmiral(Alert):
                 self.__tasks.append(new_task)
                 # alert user
                 self.alert_user(
-                    f"New task assigned:\n{new_task.description}, location: {new_task.from_} to {new_task.to}"
+                    f"New task assigned:\nID: {new_task.id}, Description: {new_task.description}, location: {new_task.from_} to {new_task.to}"
                 )
         elif type(task) == tuple:
             new_task = Task(*task)
             self.__tasks.append(new_task)
             self.alert_user(
-                f"-------New task assigned-------:\n{new_task.description}, location: {new_task.from_} to {new_task.to}"
+                f"-------New task assigned-------:\nID: {new_task.id}, Description: {new_task.description}, location: {new_task.from_} to {new_task.to}"
             )
 
     def assign_tasks(self):
         # one robot for each task
         for robot_index, task in enumerate(self.__tasks, start=1):
-            speed_map = {"low": 2, "normal": 3.5, "high": 5}
+            speed_map = {"green": 2, "blue": 3.5, "red": 5}
             speed = speed_map.get(task.priority.lower(), 3.5)
 
             robot = Robot(
@@ -98,15 +98,56 @@ commander.accept_tasks(
             "Get freshly shipped goods from Docking are to warehouse",
             "DA",
             "WH",
-            "normal",
+            "blue",
         ),
-        (2, "delivery of goods from warehouse to delivery station", "WH", "DS", "low"),
+        (
+            2,
+            "delivery of goods from warehouse to delivery station",
+            "WH",
+            "DS",
+            "green",
+        ),
         (
             3,
             "Move goods from docking area directly to delivery station",
             "DA",
             "DS",
-            "High",
+            "red",
+        ),
+        (
+            4,
+            "return stuff from delivery to warehouse",
+            "DS",
+            "WH",
+            "blue",
+        ),
+        (
+            5,
+            "return some goods from delivery station to docking area",
+            "DS",
+            "DA",
+            "green",
+        ),
+        (
+            6,
+            "Urgent delivery of goods from Warehouse to delivery station",
+            "WH",
+            "DS",
+            "red",
+        ),
+        (
+            7,
+            "return goods quickly to docking area from warehouse",
+            "WH",
+            "DA",
+            "red",
+        ),
+        (
+            8,
+            "Move goods from docking area directly to delivery station",
+            "DA",
+            "DS",
+            "green",
         ),
     ]
 )

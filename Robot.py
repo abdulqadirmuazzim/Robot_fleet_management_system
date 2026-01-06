@@ -10,12 +10,18 @@ class Robot:
         self.position = "CS"  # All robots are at the charging station by default
         self.task = task
         self.speed = speed
-        routes = [self.position] + routes
+        self.path_index = 1
+        # They start from the charging station when done go back to the charging station
+        routes = [self.position] + routes + [self.position]
         stack = []
-        for num in range(len(routes)):
-            if num == len(routes) - 1:
-                break
-            route = get_route(routes[num], routes[num + 1])
-            stack.append(route)
+        try:
+            for num in range(len(routes)):
+                if num == len(routes) - 1:
+                    break
+                route = get_route(routes[num], routes[num + 1])
+                stack.append(route)
+        except ValueError:
+            print("error occured plannig routes")
 
         self.route = np.vstack(stack)
+        self.pos = self.route[0].astype(float)

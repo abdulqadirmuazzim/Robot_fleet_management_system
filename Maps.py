@@ -16,6 +16,7 @@ routes = {
     "WH_DS": np.array([[600, 460], [600, 730]]),
     "DS_WH": np.array([[635, 730], [635, 460]]),
     "DS_CS": np.array([[570, 770], [120, 770]]),
+    "CS_DS": np.array([[120, 665], [475, 665], [475, 460], [600, 460], [600, 730]]),
 }
 
 
@@ -62,30 +63,29 @@ class Map:
     def animate(self, robots: list, tasks: list):
         self.__plot_map("robot_map.png")
         scatters = [
-            self.__ax.scatter(r.route[0, 0], r.route[0, 1], s=20) for r in robots
+            self.__ax.scatter(r.route[0, 0], r.route[0, 1], s=20, c=tasks[i].priority)
+            for i, r in enumerate(robots)
         ]
 
         def update(frame):
             artists = []
 
             for i, robot in enumerate(robots):
-                robot.path_index = 1
                 if robot.path_index >= len(robot.route):
                     continue
                 # target
                 target = robot.route[robot.path_index]
                 # current position
-                pos = robot.route[0]
 
-                direction = target - pos
+                direction = target - robot.pos
                 dist = np.linalg.norm(direction)
 
-                if dist > 1.5:
-                    pos = pos + robot.speed * direction / dist
+                if dist > robot.speed:
+                    robot.pos += robot.speed * direction / dist
                 else:
                     robot.path_index += 1
 
-                scatters[i].set_offsets(pos)
+                scatters[i].set_offsets(robot.pos)
 
                 artists.append(scatters[i])
 
