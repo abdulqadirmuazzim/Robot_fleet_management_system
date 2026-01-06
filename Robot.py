@@ -1,18 +1,21 @@
 # Robot class goes here
 import numpy as np
-from Maps import Map
+from Maps import get_route
 
 
 class Robot:
-    def __init__(self, ID, name, task):
+    def __init__(self, ID, name, task, routes: list, speed):
         self.__id = ID
         self.name = name
         self.position = "CS"  # All robots are at the charging station by default
         self.task = task
+        self.speed = speed
+        routes = [self.position] + routes
+        stack = []
+        for num in range(len(routes)):
+            if num == len(routes) - 1:
+                break
+            route = get_route(routes[num], routes[num + 1])
+            stack.append(route)
 
-    def move(self, current_location, destination, speed):
-        fig, ax = Map().show_animation(current_location, destination, speed)
-        return fig, ax
-
-    def perform_task(self):
-        pass
+        self.route = np.vstack(stack)

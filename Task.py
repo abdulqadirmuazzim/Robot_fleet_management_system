@@ -9,7 +9,7 @@ class Task:
     ):
         """`priority`: either `low`, `normal` or `high`"""
 
-        self.__id = ID
+        self.id = ID
         self.description = description
         self.from_ = from_
         self.to = to

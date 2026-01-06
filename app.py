@@ -22,6 +22,7 @@ class FleetAdmiral(Alert):
     def __init__(self):
         self.__tasks = []
         self.__robots = []
+        self.current_map = Map()
 
     def accept_tasks(self, task: list | tuple):
         """
@@ -52,32 +53,44 @@ class FleetAdmiral(Alert):
             new_task = Task(*task)
             self.__tasks.append(new_task)
             self.alert_user(
-                f"New task assigned:\n{new_task.description}, location: {new_task.from_} to {new_task.to}"
+                f"-------New task assigned-------:\n{new_task.description}, location: {new_task.from_} to {new_task.to}"
             )
 
     def assign_tasks(self):
         # one robot for each task
         for robot_index, task in enumerate(self.__tasks, start=1):
-            robot = Robot(robot_index, f"Robot{robot_index}", task.description)
-            # add robot to fleet
-            self.__robots.append(robot)
+            speed_map = {"low": 2, "normal": 3.5, "high": 5}
+            speed = speed_map.get(task.priority.lower(), 3.5)
+
+            robot = Robot(
+                robot_index,
+                f"Robot{robot_index}",
+                task.description,
+                routes=[task.from_, task.to],
+                speed=speed,
+            )
             # alert user which robot had taken a specific task
             self.alert_user(f"Task: {task.description} assigned to {robot.name}")
             task.status = "In progress"
+            # add robot to fleet
+            self.__robots.append(robot)
             # check task priority
-            speed_map = {"low": 2, "normal": 3.5, "high": 5}
-            speed = speed_map.get(task.priority.lower(), 3.5)
-            # move robots to perform task
-            robot.move(task.from_, task.to, speed)
-            task.status = "Completed"
+        anim = self.current_map.animate(self.__robots, self.__tasks)
+        return anim
 
     def alert_user(self, message):
         return super().alert_user(message)
 
+    def task_status(self, id_):
+        for task in self.__tasks:
+            if task.id == id_:
+                return task.status
+        return "Task not found"
+
 
 commander = FleetAdmiral()
 
-
+# Example
 commander.accept_tasks(
     [
         (
@@ -97,3 +110,7 @@ commander.accept_tasks(
         ),
     ]
 )
+
+anim = commander.assign_tasks()
+
+plt.show()
