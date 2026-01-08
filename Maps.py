@@ -60,11 +60,13 @@ class Map:
         self.__ax.imshow(opened_map)
         return self.__fig, self.__ax
 
-    def animate(self, robots: list, tasks: list):
+    def animate(self, robots: list):
+        # plot out the map
         self.__plot_map("robot_map.png")
+        # plot robots
         scatters = [
-            self.__ax.scatter(r.route[0, 0], r.route[0, 1], s=20, c=tasks[i].priority)
-            for i, r in enumerate(robots)
+            self.__ax.scatter(r.route[0, 0], r.route[0, 1], s=20, c=r.task.priority)
+            for r in robots
         ]
 
         def update(frame):
@@ -75,8 +77,8 @@ class Map:
                     continue
                 # target
                 target = robot.route[robot.path_index]
-                # current position
 
+                # current position
                 direction = target - robot.pos
                 dist = np.linalg.norm(direction)
 
@@ -91,9 +93,6 @@ class Map:
 
             return artists
 
-        anim = fa(self.__fig, update, frames=500, interval=50)
-        # complete the tasks
-        for task in tasks:
-            task.status = "Completed"
+        anim = fa(self.__fig, update, frames=600, interval=50)
 
         return anim

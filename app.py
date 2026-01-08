@@ -65,17 +65,19 @@ class FleetAdmiral(Alert):
             robot = Robot(
                 robot_index,
                 f"Robot{robot_index}",
-                task.description,
+                task,
                 routes=[task.from_, task.to],
                 speed=speed,
             )
             # alert user which robot had taken a specific task
-            self.alert_user(f"Task: {task.description} assigned to {robot.name}")
+            self.alert_user(
+                f"Task id: {task.id}, description: {task.description}. assigned to {robot.name}\n\n"
+            )
             task.status = "In progress"
             # add robot to fleet
             self.__robots.append(robot)
             # check task priority
-        anim = self.current_map.animate(self.__robots, self.__tasks)
+        anim = self.current_map.animate(self.__robots)
         return anim
 
     def alert_user(self, message):
@@ -153,5 +155,6 @@ commander.accept_tasks(
 )
 
 anim = commander.assign_tasks()
-
+# anim.save("fleet_animation.gif")
+plt.legend(["Normal Priority", "Low Priority", "High Priority"], loc="upper left")
 plt.show()

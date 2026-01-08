@@ -15,3 +15,6 @@ class Task:
         self.to = to
         self.status = "Pending"
         self.priority = priority
+
+    def update_status(self, status):
+        return self.status

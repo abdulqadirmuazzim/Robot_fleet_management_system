@@ -24,4 +24,13 @@ class Robot:
             print("error occured plannig routes")
 
         self.route = np.vstack(stack)
+
         self.pos = self.route[0].astype(float)
+
+        # priority logic
+        if self.task.priority.lower() == "red":
+            self.type = "High Priority Robot"
+        elif self.task.priority.lower() == "blue":
+            self.type = "Normal Priority Robot"
+        else:
+            self.type = "Low Priority Robot"
