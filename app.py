@@ -93,68 +93,92 @@ class FleetAdmiral(Alert):
 commander = FleetAdmiral()
 
 # Example
-commander.accept_tasks(
-    [
-        (
-            1,
-            "Get freshly shipped goods from Docking are to warehouse",
-            "DA",
-            "WH",
-            "blue",
-        ),
-        (
-            2,
-            "delivery of goods from warehouse to delivery station",
-            "WH",
-            "DS",
-            "green",
-        ),
-        (
-            3,
-            "Move goods from docking area directly to delivery station",
-            "DA",
-            "DS",
-            "red",
-        ),
-        (
-            4,
-            "return stuff from delivery to warehouse",
-            "DS",
-            "WH",
-            "blue",
-        ),
-        (
-            5,
-            "return some goods from delivery station to docking area",
-            "DS",
-            "DA",
-            "green",
-        ),
-        (
-            6,
-            "Urgent delivery of goods from Warehouse to delivery station",
-            "WH",
-            "DS",
-            "red",
-        ),
-        (
-            7,
-            "return goods quickly to docking area from warehouse",
-            "WH",
-            "DA",
-            "red",
-        ),
-        (
-            8,
-            "Move goods from docking area directly to delivery station",
-            "DA",
-            "DS",
-            "green",
-        ),
-    ]
-)
 
+tasks = []
+
+print("---- Enter the tasks or list of tasks you want completed ----")
+print("--- To quit submit empty input on the 'description' input --- ")
+
+id_ = 0
+
+while True:
+    description = input("Enter task description: ")
+
+    if not description:
+        break
+
+    from_ = input("Enter task starting location code: ")
+    to = input("Enter task destination location code: ")
+    priority = input("How important is the task?: ")
+
+    task = (id_, description, from_, to, priority)
+    tasks.append(task)
+    id_ += 1
+
+# fleet manager accecpts tasks from user
+commander.accept_tasks(tasks)
+
+# fleet manager assigns tasks to robots to execute
 anim = commander.assign_tasks()
-# anim.save("fleet_animation.gif")
-plt.legend(["Normal Priority", "Low Priority", "High Priority"], loc="upper left")
+
+
 plt.show()
+
+# tasks = [
+#     (
+#         1,
+#         "Get freshly shipped goods from Docking are to warehouse",
+#         "DA",
+#         "WH",
+#         "blue",
+#     ),
+#     (
+#         2,
+#         "delivery of goods from warehouse to delivery station",
+#         "WH",
+#         "DS",
+#         "green",
+#     ),
+#     (
+#         3,
+#         "Move goods from docking area directly to delivery station",
+#         "DA",
+#         "DS",
+#         "red",
+#     ),
+#     (
+#         4,
+#         "return stuff from delivery to warehouse",
+#         "DS",
+#         "WH",
+#         "blue",
+#     ),
+#     (
+#         5,
+#         "return some goods from delivery station to docking area",
+#         "DS",
+#         "DA",
+#         "green",
+#     ),
+#     (
+#         6,
+#         "Urgent delivery of goods from Warehouse to delivery station",
+#         "WH",
+#         "DS",
+#         "red",
+#     ),
+#     (
+#         7,
+#         "return goods quickly to docking area from warehouse",
+#         "WH",
+#         "DA",
+#         "red",
+#     ),
+#     (
+#         8,
+#         "Move goods from docking area directly to delivery station",
+#         "DA",
+#         "DS",
+#         "green",
+#     ),
+# ]
