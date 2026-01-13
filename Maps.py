@@ -85,6 +85,7 @@ class Map:
                 if dist > robot.speed:
                     robot.pos += robot.speed * direction / dist
                 else:
+                    robot.pos = target.astype(float)
                     robot.path_index += 1
 
                 scatters[i].set_offsets(robot.pos)

@@ -1,15 +1,9 @@
 # Bismillah
-from abc import ABC, abstractmethod
 from Task import Task
 from Maps import Map
 from Robot import Robot
 from matplotlib import pyplot as plt
-
-
-class Alert(ABC):
-    @abstractmethod
-    def alert_user(self, message):
-        print(message)
+from Alert import Alert
 
 
 class FleetAdmiral(Alert):
@@ -56,7 +50,18 @@ class FleetAdmiral(Alert):
                 f"-------New task assigned-------:\nID: {new_task.id}, Description: {new_task.description}, location: {new_task.from_} to {new_task.to}"
             )
 
-    def assign_tasks(self):
+    def assign_tasks(self, save_animation=False):
+        """
+        This method is to be used after the `accept_tasks` method, it assigns each task to a robot
+        and alerts the user which robot has taken which task, it also starts the animation of the
+        robots on the map. Example usage:<br>
+        ```python
+        commander = FleetAdmiral()
+        commander.accept_tasks((1, "Get freshly shipped goods from Docking are to warehouse", "DA"))
+        anim = commander.assign_tasks()
+        plt.show()
+        ```
+        """
         # one robot for each task
         for robot_index, task in enumerate(self.__tasks, start=1):
             speed_map = {"green": 2, "blue": 3.5, "red": 5}
@@ -78,7 +83,11 @@ class FleetAdmiral(Alert):
             self.__robots.append(robot)
             # check task priority
         anim = self.current_map.animate(self.__robots)
-        return anim
+        if save_animation:
+            anim.save("fleet_animation.mp4", writer="ffmpeg", fps=30)
+        plt.show()
+        # alert user all tasks are completed
+        self.alert_user("All tasks are completed!")
 
     def alert_user(self, message):
         return super().alert_user(message)
@@ -94,91 +103,94 @@ commander = FleetAdmiral()
 
 # Example
 
-tasks = []
 
 print("---- Enter the tasks or list of tasks you want completed ----")
 print("--- To quit submit empty input on the 'description' input --- ")
+print(
+    "--- Task locations are coded as ---: DA = Docking Area,\n WH = Warehouse,\n DS = Delivery Station,\n CS = Charging Station,\n DA = Docking Area"
+)
 
-id_ = 0
 
-while True:
-    description = input("Enter task description: ")
-
-    if not description:
-        break
-
-    from_ = input("Enter task starting location code: ")
-    to = input("Enter task destination location code: ")
-    priority = input("How important is the task?: ")
-
-    task = (id_, description, from_, to, priority)
-    tasks.append(task)
-    id_ += 1
+# Example tasks
+tasks = [
+    (
+        1,
+        "Get freshly shipped goods from Docking are to warehouse",
+        "DA",
+        "WH",
+        "normal",
+    ),
+    (
+        2,
+        "delivery of goods from warehouse to delivery station",
+        "WH",
+        "DS",
+        "low",
+    ),
+    (
+        3,
+        "Move goods from docking area directly to delivery station",
+        "DA",
+        "DS",
+        "high",
+    ),
+    (
+        4,
+        "return stuff from delivery to warehouse",
+        "DS",
+        "WH",
+        "normal",
+    ),
+    (
+        5,
+        "return some goods from delivery station to docking area",
+        "DS",
+        "DA",
+        "low",
+    ),
+    (
+        6,
+        "Urgent delivery of goods from Warehouse to delivery station",
+        "WH",
+        "DS",
+        "high",
+    ),
+    (
+        7,
+        "return goods quickly to docking area from warehouse",
+        "WH",
+        "DA",
+        "high",
+    ),
+    (
+        8,
+        "Move goods from docking area directly to delivery station",
+        "DA",
+        "DS",
+        "low",
+    ),
+]
 
 # fleet manager accecpts tasks from user
 commander.accept_tasks(tasks)
 
 # fleet manager assigns tasks to robots to execute
-anim = commander.assign_tasks()
+commander.assign_tasks()
 
 
-plt.show()
+# user input for tasks
+# tasks = []
+# id_ = 0
+# while True:
+#     description = input("Enter task description: ")
 
-# tasks = [
-#     (
-#         1,
-#         "Get freshly shipped goods from Docking are to warehouse",
-#         "DA",
-#         "WH",
-#         "blue",
-#     ),
-#     (
-#         2,
-#         "delivery of goods from warehouse to delivery station",
-#         "WH",
-#         "DS",
-#         "green",
-#     ),
-#     (
-#         3,
-#         "Move goods from docking area directly to delivery station",
-#         "DA",
-#         "DS",
-#         "red",
-#     ),
-#     (
-#         4,
-#         "return stuff from delivery to warehouse",
-#         "DS",
-#         "WH",
-#         "blue",
-#     ),
-#     (
-#         5,
-#         "return some goods from delivery station to docking area",
-#         "DS",
-#         "DA",
-#         "green",
-#     ),
-#     (
-#         6,
-#         "Urgent delivery of goods from Warehouse to delivery station",
-#         "WH",
-#         "DS",
-#         "red",
-#     ),
-#     (
-#         7,
-#         "return goods quickly to docking area from warehouse",
-#         "WH",
-#         "DA",
-#         "red",
-#     ),
-#     (
-#         8,
-#         "Move goods from docking area directly to delivery station",
-#         "DA",
-#         "DS",
-#         "green",
-#     ),
-# ]
+#     if not description:
+#         break
+
+#     from_ = input("Enter task starting location code: ")
+#     to = input("Enter task destination location code: ")
+#     priority = input("Task priority: ")
+
+#     task = (id_, description, from_, to, priority)
+#     tasks.append(task)
+#     id_ += 1

@@ -5,16 +5,21 @@ class Task:
         description: str,
         from_,
         to,
-        priority: str = "green" or "blue" or "red",
+        priority: str = "low" or "normal" or "high",
     ):
-        """`priority`: either `green` for low , `blue` for normal or `red`, high"""
+        """`priority`: either `low` for low priority, `normal` for normal priority, or `high` for high priority"""
 
         self.id = ID
         self.description = description
         self.from_ = from_
         self.to = to
-        self.status = "Pending"
-        self.priority = priority
+        self.__status = "Pending"
+        priority_map = {"low": "green", "normal": "blue", "high": "red"}
+        self.priority = priority_map.get(priority.lower(), "blue")
 
     def update_status(self, status):
-        return self.status
+        self.__status = status
+        return self.__status
+    
+    def get_status(self):
+        return self.__status
