@@ -101,15 +101,6 @@ class FleetAdmiral(Alert):
 
 commander = FleetAdmiral()
 
-# Example
-
-
-print("---- Enter the tasks or list of tasks you want completed ----")
-print("--- To quit submit empty input on the 'description' input --- ")
-print(
-    "--- Task locations are coded as ---: DA = Docking Area,\n WH = Warehouse,\n DS = Delivery Station,\n CS = Charging Station,\n DA = Docking Area"
-)
-
 
 # Example tasks
 tasks = [
